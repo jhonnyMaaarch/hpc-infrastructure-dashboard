@@ -1,0 +1,15 @@
+
+apiVersion: v1                 # Core Kubernetes API version
+kind: Service                 # Create a Service resource
+metadata:                     # Identifying information
+  name: hpc-dashboard-service # Name assigned to the Service
+spec:                         # Desired Service configuration
+  type: NodePort              # Expose Service through a node port
+  selector:                   # Select Pods using their labels
+    app: hpc-dashboard        # Match Pods labeled app=hpc-dashboard
+  ports:                      # Define network port mappings
+    - protocol: TCP           # Use TCP for HTTP traffic
+      port: 80                # Port exposed by the Service
+      targetPort: 80          # Destination port inside the Pod
+      nodePort: 30080         # Port exposed on Kubernetes nodes
+

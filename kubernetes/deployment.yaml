@@ -1,0 +1,32 @@
+
+apiVersion: apps/v1                 # API version for Deployments
+kind: Deployment                    # Kubernetes resource to create
+metadata:                           # Identifying information
+  name: hpc-dashboard               # Name of this Deployment
+  labels:                           # Labels attached to the Deployment
+    app: hpc-dashboard              # Application identifier
+spec:                               # Desired Deployment configuration
+  replicas: 1                       # Run one application Pod
+  selector:                          # Identifies Pods managed by this Deployment
+    matchLabels:                     # Pod labels that must match
+      app: hpc-dashboard             # Match the application label
+  template:                          # Blueprint for creating Pods
+    metadata:                        # Metadata for each Pod
+      labels:                        # Labels assigned to each Pod
+        app: hpc-dashboard           # Must match selector.matchLabels
+    spec:                            # Pod configuration
+      nodeSelector:                  # Restrict eligible scheduling nodes
+        kubernetes.io/hostname: k8s-worker01 # Target our worker
+      containers:                    # Containers within the Pod
+        - name: dashboard            # Container name
+          image: nginx:stable-alpine # Lightweight Nginx image
+          ports:                     # Container port declarations
+            - containerPort: 80      # Nginx listens on TCP port 80
+          resources:                 # Resource reservations and limits
+            requests:                # Minimum resources reserved
+              cpu: "100m"            # One tenth of a CPU core
+              memory: "64Mi"         # Reserve 64 MiB of memory
+            limits:                  # Maximum permitted resources
+              cpu: "250m"            # Limit CPU to one quarter core
+              memory: "128Mi"        # Limit memory to 128 MiB
+
